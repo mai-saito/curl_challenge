@@ -33,5 +33,7 @@ db.connect((error) => {
 		console.error('Error connecting MySQL: ' + error);
 		return false;
 	}
-	console.log('Successfully connected to')
-})
+	console.log('Successfully connected to MySQL!')
+});
+
+export default db;
