@@ -40,14 +40,35 @@ router.get('/:id', (req: express.Request, res: express.Response) => {
 router.post('/', (req: express.Request, res: express.Response) => {
   try {
     // Insert a new record.
-    const sql = 'INSERT INTO users (user, comment) VALUES (?, ?)';
+    const sql = 'INSERT INTO users (name, comment) VALUES (?, ?)';
     const query = db.format(sql, [req.body.name, req.body.comment]);
 
     db.query(query, (error, result) => {
       if (error) {
         res.status(400).send('Error: ' + error.message);
       }
+      // TODO: Return value
       // Return the set of results.
+      res.status(200).send(result);
+    })
+  } catch (error) {
+    res.status(400).send("Oh no... Something went wrong...");
+  }
+});
+
+// PUT
+router.put('/:id', (req: express.Request, res: express.Response) => {
+  try {
+    // Update the record.
+    const sql = 'UPDATE users SET name = ?, comment = ? WHERE id = ?';
+    const query = db.format(sql, [req.body.name, req.body.comment, req.params.id]);
+
+    db.query(query, (error, result) => {
+      if (error) {
+        res.status(400).send('Error: ' + error.message);
+      }
+      // TODO: Return value
+      // Return the updated set of results.
       res.status(200).send(result);
     })
   } catch (error) {
