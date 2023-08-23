@@ -15,10 +15,11 @@ router.get('/', (req: express.Request, res: express.Response) => {
 // GET (show)
 router.get('/:id', (req: express.Request, res: express.Response) => {
   try {
-    // Get data from DB.
+    // Create a query for getting the data.
     const sql = 'SELECT * FROM users WHERE id = ?';
     const query = db.format(sql, [req.params.id]);
 
+    // Get the record.
     db.query(query, (error, result) => {
       if (error) {
         res.status(400).send('Error: ' + error.message);
@@ -39,10 +40,11 @@ router.get('/:id', (req: express.Request, res: express.Response) => {
 // POST
 router.post('/', (req: express.Request, res: express.Response) => {
   try {
-    // Insert a new record.
+    // Create a query for inserting a new set of data.
     const sql = 'INSERT INTO users (name, comment) VALUES (?, ?)';
     const query = db.format(sql, [req.body.name, req.body.comment]);
 
+    // Insert a new record of data.
     db.query(query, (error, result) => {
       if (error) {
         res.status(400).send('Error: ' + error.message);
@@ -59,10 +61,11 @@ router.post('/', (req: express.Request, res: express.Response) => {
 // PUT
 router.put('/:id', (req: express.Request, res: express.Response) => {
   try {
-    // Update the record.
+    // Create a query for updating the data.
     const sql = 'UPDATE users SET name = ?, comment = ? WHERE id = ?';
     const query = db.format(sql, [req.body.name, req.body.comment, req.params.id]);
 
+    // Update the selected record of data.
     db.query(query, (error, result) => {
       if (error) {
         res.status(400).send('Error: ' + error.message);
@@ -75,6 +78,25 @@ router.put('/:id', (req: express.Request, res: express.Response) => {
     res.status(400).send("Oh no... Something went wrong...");
   }
 });
+
+// DELETE
+router.delete('/:id', (req: express.Request, res: express.Response) => {
+  try {
+    // Create a query for deleting the data.
+    const sql = 'DELETE FROM users WHERE id = ?';
+    const query = db.format(sql, [req.params.id]);
+
+    // Delete the selected record of data.
+    db.query(query, (error, result) => {
+      if (error) {
+        res.status(400).send('Error: ' + error);
+      }
+      res.status(200).send(result);
+    })
+  } catch (error) {
+    res.status(400).send("Oh no... Something went wrong...");
+  }
+})
 
 // HELP
 router.get('/help', (req: express.Request, res: express.Response) => {
