@@ -29,7 +29,7 @@ router.get('/:id', (req: express.Request, res: express.Response) => {
           res.status(404).send('No data for this id');
         }
         // Return the set of results.
-        res.status(200).send(result);
+        return res.status(200).send(result);
       }
     })
   } catch (error) {
@@ -49,9 +49,9 @@ router.post('/', (req: express.Request, res: express.Response) => {
       if (error) {
         res.status(400).send('Error: ' + error.message);
       }
-      // TODO: Return value
+
       // Return the set of results.
-      res.status(200).send(result);
+      res.redirect('/' + result.insertId);
     })
   } catch (error) {
     res.status(400).send("Oh no... Something went wrong...");
@@ -70,9 +70,9 @@ router.put('/:id', (req: express.Request, res: express.Response) => {
       if (error) {
         res.status(400).send('Error: ' + error.message);
       }
-      // TODO: Return value
+
       // Return the updated set of results.
-      res.status(200).send(result);
+      res.redirect('/' + result.insertId);
     })
   } catch (error) {
     res.status(400).send("Oh no... Something went wrong...");
