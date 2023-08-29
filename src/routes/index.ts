@@ -1,22 +1,32 @@
 import express from 'express';
 import db from '../index';
+import { exec } from 'child_process';
 
 const router = express.Router();
 
 // GET (index)
 router.get('/', (req: express.Request, res: express.Response) => {
   try {
-    res.status(200).send('Woohoo! You\'ve got a right answer!\nNext, I want you to create POST request.\nSame endpoint with different attributes: name and message.\nJust feel free to set any value for each parameter.\nIf you\'re stack, just call /help!');
+    exec('open http://localhost:3001/comments', (error, result, stderr) => {
+      if (error) {
+        res.status(400).write('Error: ' + error.message);
+      }
+
+      if (stderr) {
+        res.status(400).write('Error: ' + stderr);
+      }
+      res.status(200).write(result);
+    });
   } catch (error) {
     res.status(400).send("Oh no... Another chance?");
   }
 });
 
-// GET (show)
-router.get('/:id', (req: express.Request, res: express.Response) => {
+// GET (list)
+router.get('/comments', (req: express.Request, res: express.Response) => {
   try {
     // Create a query for getting the data.
-    const sql = 'SELECT * FROM users WHERE id = ?';
+    const sql = 'SELECT * FROM users ORDER BY id DESC';
     const query = db.format(sql, [req.params.id]);
 
     // Get the record.
@@ -31,7 +41,7 @@ router.get('/:id', (req: express.Request, res: express.Response) => {
         // Return the set of results.
         return res.status(200).send(result);
       }
-    })
+    });
   } catch (error) {
     res.status(400).send("Oh no... Another chance?");
   }
@@ -50,9 +60,9 @@ router.post('/', (req: express.Request, res: express.Response) => {
         res.status(400).send('Error: ' + error.message);
       }
 
-      // Return the set of results.
-      res.redirect('/' + result.insertId);
-    })
+      // Response.
+      res.status(200).send("Woohoo! Success! Why don't you reload your browser?");
+    });
   } catch (error) {
     res.status(400).send("Oh no... Something went wrong...");
   }
@@ -71,9 +81,9 @@ router.put('/:id', (req: express.Request, res: express.Response) => {
         res.status(400).send('Error: ' + error.message);
       }
 
-      // Return the updated set of results.
-      res.redirect('/' + result.insertId);
-    })
+      // Response.
+      res.status(200).send("Woohoo! Updated! Please refresh and check your browser!");
+    });
   } catch (error) {
     res.status(400).send("Oh no... Something went wrong...");
   }
@@ -91,7 +101,9 @@ router.delete('/:id', (req: express.Request, res: express.Response) => {
       if (error) {
         res.status(400).send('Error: ' + error);
       }
-      res.status(200).send(result);
+
+      // Response.
+      res.status(200).send("Yes, you got it all correct! Please refresh and check your browser!");
     })
   } catch (error) {
     res.status(400).send("Oh no... Something went wrong...");

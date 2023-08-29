@@ -13,7 +13,7 @@ const CommentList: React.FC = () => {
 		const fetchData = async () => {
 			try {
 				// TODO: Tantative endpoint
-				const res = await fetch('/1');
+				const res = await fetch('/comments');
 				const json: React.SetStateAction<Comment[] | null> = await res.json();
 
 				// Set state
